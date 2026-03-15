@@ -75,7 +75,7 @@ button.primary:hover {
   background: #2356e2;
 }
 
-button.ghost {
+button.ghost:not(.primary) {
   background: transparent;
 }
 
@@ -116,4 +116,3 @@ textarea {
 footer {
   padding: 0 18px 18px;
 }
-

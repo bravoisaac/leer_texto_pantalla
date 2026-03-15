@@ -1,4 +1,4 @@
-const { app, BrowserWindow, globalShortcut, ipcMain, nativeImage, screen } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, nativeImage, screen, shell } = require('electron');
 const path = require('path');
 const screenshot = require('screenshot-desktop');
 const { createWorker } = require('tesseract.js');
@@ -248,6 +248,9 @@ function registerShortcuts() {
   globalShortcut.register('CommandOrControl+Shift+L', () => {
     if (mainWindow) mainWindow.webContents.send('hotkey:read');
   });
+  globalShortcut.register('CommandOrControl+Shift+C', () => {
+    if (mainWindow) mainWindow.webContents.send('hotkey:toggleContinuous');
+  });
 }
 
 app.on('ready', () => {
@@ -290,6 +293,17 @@ ipcMain.on('app:log', (_evt, payload) => {
   const message = payload?.message ? String(payload.message) : '(no message)';
   const meta = payload?.meta;
   log(level, `${source}: ${message}`, meta);
+});
+
+ipcMain.handle('system:openVoiceSettings', async () => {
+  try {
+    // Windows settings page (voices are managed by the OS).
+    await shell.openExternal('ms-settings:speech');
+    return { ok: true };
+  } catch (err) {
+    log('error', 'Failed to open voice settings', err?.stack || err);
+    return { ok: false, error: 'No se pudo abrir la configuración.' };
+  }
 });
 
 ipcMain.handle('selection:open', async () => {

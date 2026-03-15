@@ -10,7 +10,7 @@
     <header>
       <h1>LeerTexto</h1>
       <p class="muted">
-        Atajos: <code>Ctrl+Shift+S</code> (seleccionar) • <code>Ctrl+Shift+L</code> (leer)
+        Atajos: <code>Ctrl+Shift+S</code> (seleccionar) • <code>Ctrl+Shift+L</code> (leer) • <code>Ctrl+Shift+C</code> (continuo)
       </p>
     </header>
 
@@ -18,6 +18,7 @@
       <div class="row">
         <button id="btnSelect">Seleccionar área</button>
         <button id="btnRead" class="primary">Leer ahora</button>
+        <button id="btnContinuous" class="ghost">Continuo: OFF</button>
       </div>
       <div class="row">
         <label for="lang">OCR idioma</label>
@@ -31,6 +32,22 @@
           Hablar automático
         </label>
       </div>
+      <div class="row">
+        <label for="voice">Voz</label>
+        <select id="voice"></select>
+        <span id="voiceCount" class="muted"></span>
+        <button id="btnRefreshVoices" class="ghost">Actualizar</button>
+        <button id="btnVoiceSettings" class="ghost">Agregar voces</button>
+      </div>
+      <div class="row">
+        <label for="pollMs">Intervalo (ms)</label>
+        <input id="pollMs" type="range" min="400" max="2500" step="100" value="900" />
+        <span id="pollMsVal" class="mono">900</span>
+        <label class="inline">
+          <input type="checkbox" id="cancelOnChange" checked />
+          Interrumpir al cambiar
+        </label>
+      </div>
       <div class="meta">
         <div><strong>Área:</strong> <span id="areaText">—</span></div>
         <div><strong>Estado:</strong> <span id="statusText">Listo</span></div>
@@ -40,7 +57,7 @@
     <section class="card">
       <div class="row">
         <label for="rate">Velocidad</label>
-        <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="1" />
+        <input id="rate" type="range" min="0.6" max="5" step="0.05" value="1.6" />
         <span id="rateVal" class="mono">1.00</span>
         <button id="btnStop" class="ghost">Parar voz</button>
       </div>
@@ -54,4 +71,3 @@
     <script src="./renderer.js"></script>
   </body>
 </html>
-

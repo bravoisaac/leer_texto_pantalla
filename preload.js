@@ -52,9 +52,11 @@ contextBridge.exposeInMainWorld('leertexto', {
     }
   },
   setLanguage: (lang) => ipcRenderer.invoke('ocr:setLanguage', lang),
+  openVoiceSettings: () => ipcRenderer.invoke('system:openVoiceSettings'),
   onSelectionUpdated: (cb) => ipcRenderer.on('selection-updated', (_e, sel) => cb(sel)),
   onOcrProgress: (cb) => ipcRenderer.on('ocr-progress', (_e, msg) => cb(msg)),
   onHotkeyRead: (cb) => ipcRenderer.on('hotkey:read', () => cb()),
+  onHotkeyToggleContinuous: (cb) => ipcRenderer.on('hotkey:toggleContinuous', () => cb()),
   cancelSelection: () => ipcRenderer.send('selection:cancel'),
   finishSelection: (selection) => ipcRenderer.send('selection:done', selection),
   debugLog: (message, meta) => sendLog('info', String(message || ''), meta),
