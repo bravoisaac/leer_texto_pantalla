@@ -41,8 +41,11 @@
       </div>
       <div class="row">
         <label for="pollMs">Intervalo (ms)</label>
-        <input id="pollMs" type="range" min="400" max="2500" step="100" value="900" />
+        <input id="pollMs" type="range" min="100" max="2500" step="50" value="500" />
         <span id="pollMsVal" class="mono">900</span>
+        <label for="stableReads">Confirmación</label>
+        <input id="stableReads" type="range" min="1" max="3" step="1" value="1" />
+        <span id="stableReadsVal" class="mono">1</span>
         <label class="inline">
           <input type="checkbox" id="cancelOnChange" checked />
           Interrumpir al cambiar
@@ -57,8 +60,11 @@
     <section class="card">
       <div class="row">
         <label for="rate">Velocidad</label>
-        <input id="rate" type="range" min="0.6" max="5" step="0.05" value="1.6" />
+        <input id="rate" type="range" min="0.6" max="10" step="0.05" value="2.5" />
         <span id="rateVal" class="mono">1.00</span>
+        <label for="volume">Volumen</label>
+        <input id="volume" type="range" min="0" max="1" step="0.05" value="1" />
+        <span id="volumeVal" class="mono">100%</span>
         <button id="btnStop" class="ghost">Parar voz</button>
       </div>
       <textarea id="text" placeholder="El texto reconocido aparecerá aquí..." spellcheck="false"></textarea>

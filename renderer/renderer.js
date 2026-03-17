@@ -13,11 +13,15 @@ const lang = document.getElementById('lang');
 
 const rate = document.getElementById('rate');
 const rateVal = document.getElementById('rateVal');
+const volume = document.getElementById('volume');
+const volumeVal = document.getElementById('volumeVal');
 const voiceSelect = document.getElementById('voice');
 const voiceCount = document.getElementById('voiceCount');
 
 const pollMs = document.getElementById('pollMs');
 const pollMsVal = document.getElementById('pollMsVal');
+const stableReads = document.getElementById('stableReads');
+const stableReadsVal = document.getElementById('stableReadsVal');
 const cancelOnChange = document.getElementById('cancelOnChange');
 
 let continuousOn = false;
@@ -169,7 +173,8 @@ function speak(text) {
   if (cancelOnChange.checked) speechSynthesis.cancel();
 
   const utter = new SpeechSynthesisUtterance(clean);
-  utter.rate = Math.max(0.1, Math.min(5, Number(rate.value)));
+  utter.rate = Math.max(0.1, Math.min(10, Number(rate.value)));
+  utter.volume = Math.max(0, Math.min(1, Number(volume.value)));
 
   const choice = voiceSelect?.value || 'preset:auto';
   const voices = speechSynthesis.getVoices();
@@ -236,7 +241,8 @@ async function continuousTick() {
     }
 
     // Anti-ruido: exige ver el mismo texto 2 veces seguidas.
-    if (stableCount < 2) {
+    const need = Math.max(1, Number(stableReads.value) || 1);
+    if (stableCount < need) {
       setStatus('Continuo: detectando…');
       return;
     }
@@ -268,7 +274,7 @@ function startContinuous() {
   updateContinuousButton();
   setStatus('Continuo: ON');
 
-  const ms = Number(pollMs.value);
+  const ms = Math.max(100, Number(pollMs.value));
   if (continuousTimer) clearInterval(continuousTimer);
   continuousTimer = setInterval(continuousTick, ms);
   continuousTick();
@@ -296,6 +302,13 @@ lang.addEventListener('change', async () => {
 
 rate.addEventListener('input', () => {
   rateVal.textContent = Number(rate.value).toFixed(2);
+  localStorage.setItem('leertexto_rate', String(rate.value));
+});
+
+volume.addEventListener('input', () => {
+  const v = Math.max(0, Math.min(1, Number(volume.value)));
+  volumeVal.textContent = `${Math.round(v * 100)}%`;
+  localStorage.setItem('leertexto_volume', String(v));
 });
 
 voiceSelect.addEventListener('change', () => {
@@ -310,7 +323,17 @@ btnVoiceSettings.addEventListener('click', async () => {
 
 pollMs.addEventListener('input', () => {
   pollMsVal.textContent = String(pollMs.value);
+  localStorage.setItem('leertexto_poll_ms', String(pollMs.value));
   if (continuousOn) startContinuous();
+});
+
+stableReads.addEventListener('input', () => {
+  stableReadsVal.textContent = String(stableReads.value);
+  if (continuousOn) {
+    lastSeenNorm = '';
+    lastSpokenNorm = '';
+    stableCount = 0;
+  }
 });
 
 window.leertexto.onSelectionUpdated((sel) => {
@@ -342,7 +365,17 @@ window.leertexto.onOcrProgress((msg) => {
 
 speechSynthesis.onvoiceschanged = () => loadVoices();
 
+const savedRate = Number(localStorage.getItem('leertexto_rate'));
+if (!Number.isNaN(savedRate) && savedRate > 0) rate.value = String(savedRate);
 rateVal.textContent = Number(rate.value).toFixed(2);
+
+const savedVolume = Number(localStorage.getItem('leertexto_volume'));
+if (!Number.isNaN(savedVolume) && savedVolume >= 0) volume.value = String(Math.max(0, Math.min(1, savedVolume)));
+volumeVal.textContent = `${Math.round(Number(volume.value) * 100)}%`;
+
+const savedPoll = Number(localStorage.getItem('leertexto_poll_ms'));
+if (!Number.isNaN(savedPoll) && savedPoll >= 100) pollMs.value = String(savedPoll);
 pollMsVal.textContent = String(pollMs.value);
+stableReadsVal.textContent = String(stableReads.value);
 updateContinuousButton();
 loadVoices();
