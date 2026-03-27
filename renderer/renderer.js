@@ -30,6 +30,7 @@ let continuousInFlight = false;
 let lastSeenNorm = '';
 let stableCount = 0;
 let lastSpokenNorm = '';
+let lastPresetCount = 0;
 
 function setStatus(text) {
   statusText.textContent = text;
@@ -69,23 +70,51 @@ function findDefaultVoice(voices) {
   return voices.find((v) => v.default) || null;
 }
 
+function normalizeForHint(text) {
+  return String(text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function normalizeLangForMatch(langOrPrefix) {
+  return String(langOrPrefix || '')
+    .toLowerCase()
+    .replace(/_/g, '-');
+}
+
 function includesAny(haystack, needles) {
-  const h = String(haystack || '').toLowerCase();
-  return needles.some((n) => h.includes(n));
+  const h = normalizeForHint(haystack);
+  return needles.some((n) => h.includes(normalizeForHint(n)));
 }
 
 function findByLang(voices, prefix) {
-  const p = String(prefix || '').toLowerCase();
-  return voices.find((v) => String(v.lang || '').toLowerCase().startsWith(p)) || null;
+  const p = normalizeLangForMatch(prefix);
+  return voices.find((v) => normalizeLangForMatch(v.lang).startsWith(p)) || null;
+}
+
+function findByNameHints(voices, hints) {
+  return voices.find((v) => includesAny(v.name, hints)) || voices.find((v) => includesAny(v.voiceURI, hints)) || null;
 }
 
 function findByLangAndNameHints(voices, prefix, hints) {
-  const p = String(prefix || '').toLowerCase();
+  const p = normalizeLangForMatch(prefix);
   return (
-    voices.find((v) => String(v.lang || '').toLowerCase().startsWith(p) && includesAny(v.name, hints)) ||
-    voices.find((v) => String(v.lang || '').toLowerCase().startsWith(p) && includesAny(v.voiceURI, hints)) ||
+    voices.find((v) => normalizeLangForMatch(v.lang).startsWith(p) && includesAny(v.name, hints)) ||
+    voices.find((v) => normalizeLangForMatch(v.lang).startsWith(p) && includesAny(v.voiceURI, hints)) ||
     null
   );
+}
+
+function renderVoiceSummary(voices, presetCount) {
+  if (!voiceCount) return;
+  const choice = voiceSelect?.value || 'preset:auto';
+  const voice = choice.startsWith('preset:')
+    ? chooseVoiceForPreset(choice, voices)
+    : voices.find((v) => v.voiceURI === choice) || pickVoice();
+
+  const using = voice ? `${voice.name} — ${voice.lang || '??'}` : '—';
+  voiceCount.textContent = `Voces instaladas: ${voices.length} (+${presetCount} presets) · Usando: ${using}`;
 }
 
 function chooseVoiceForPreset(preset, voices) {
@@ -96,6 +125,35 @@ function chooseVoiceForPreset(preset, voices) {
       return findDefaultVoice(voices) || pickVoice();
     case 'preset:es':
       return findByLang(voices, 'es') || pickVoice();
+    case 'preset:ximena_mx': {
+      const nameHints = ['ximena'];
+      const mxFemaleHints = ['ximena', 'dalia', 'sabina', 'paulina'];
+      return (
+        findByNameHints(voices, nameHints) ||
+        findByLangAndNameHints(voices, 'es-mx', mxFemaleHints) ||
+        findByLang(voices, 'es-mx') ||
+        findByLang(voices, 'es') ||
+        pickVoice()
+      );
+    }
+    case 'preset:dalia_mx':
+      return findByNameHints(voices, ['dalia']) || findByLang(voices, 'es-mx') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:sabina_mx':
+      return findByNameHints(voices, ['sabina']) || findByLang(voices, 'es-mx') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:raul_mx':
+      return findByNameHints(voices, ['raul', 'raúl']) || findByLang(voices, 'es-mx') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:jorge':
+      return findByNameHints(voices, ['jorge']) || findByLang(voices, 'es') || pickVoice();
+    case 'preset:helena_es':
+      return findByNameHints(voices, ['helena']) || findByLang(voices, 'es-es') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:laura_es':
+      return findByNameHints(voices, ['laura']) || findByLang(voices, 'es-es') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:pablo_es':
+      return findByNameHints(voices, ['pablo']) || findByLang(voices, 'es-es') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:paloma_us':
+      return findByNameHints(voices, ['paloma']) || findByLang(voices, 'es-us') || findByLang(voices, 'es') || pickVoice();
+    case 'preset:alonso_us':
+      return findByNameHints(voices, ['alonso']) || findByLang(voices, 'es-us') || findByLang(voices, 'es') || pickVoice();
     case 'preset:es_female': {
       const femaleHints = [
         'female',
@@ -132,7 +190,7 @@ function loadVoices() {
   const picked = getVoiceChoice();
 
   voiceSelect.innerHTML = '';
-  const presets = [
+  const basePresets = [
     { value: 'preset:auto', label: 'Auto (mejor disponible)' },
     { value: 'preset:default', label: 'Windows predeterminada' },
     { value: 'preset:es', label: 'Español (auto)' },
@@ -142,11 +200,46 @@ function loadVoices() {
     { value: 'preset:ja', label: 'Japonés (auto)' },
   ];
 
-  for (const p of presets) {
+  const popularSpanishPresets = [
+    { value: 'preset:ximena_mx', label: 'Ximena — Español (México)', strictHints: ['ximena'] },
+    { value: 'preset:dalia_mx', label: 'Dalia — Español (México)', strictHints: ['dalia'] },
+    { value: 'preset:sabina_mx', label: 'Sabina — Español (México)', strictHints: ['sabina'] },
+    { value: 'preset:raul_mx', label: 'Raúl — Español (México)', strictHints: ['raul', 'raúl'] },
+    { value: 'preset:jorge', label: 'Jorge — Español', strictHints: ['jorge'] },
+    { value: 'preset:helena_es', label: 'Helena — Español (España)', strictHints: ['helena'] },
+    { value: 'preset:laura_es', label: 'Laura — Español (España)', strictHints: ['laura'] },
+    { value: 'preset:pablo_es', label: 'Pablo — Español (España)', strictHints: ['pablo'] },
+    { value: 'preset:paloma_us', label: 'Paloma — Español (EE.UU.)', strictHints: ['paloma'] },
+    { value: 'preset:alonso_us', label: 'Alonso — Español (EE.UU.)', strictHints: ['alonso'] },
+  ];
+
+  const shownPopular = popularSpanishPresets.filter((p) => {
+    if (!Array.isArray(p.strictHints) || p.strictHints.length === 0) return true;
+    return Boolean(findByNameHints(voices, p.strictHints));
+  });
+
+  lastPresetCount = basePresets.length + shownPopular.length;
+
+  for (const p of basePresets) {
     const opt = document.createElement('option');
     opt.value = p.value;
     opt.textContent = p.label;
     voiceSelect.appendChild(opt);
+  }
+
+  if (shownPopular.length) {
+    const sepPopular = document.createElement('option');
+    sepPopular.disabled = true;
+    sepPopular.value = '__sep_popular__';
+    sepPopular.textContent = '— Español: top 10 —';
+    voiceSelect.appendChild(sepPopular);
+
+    for (const p of shownPopular) {
+      const opt = document.createElement('option');
+      opt.value = p.value;
+      opt.textContent = p.label;
+      voiceSelect.appendChild(opt);
+    }
   }
 
   const sep = document.createElement('option');
@@ -164,7 +257,7 @@ function loadVoices() {
 
   if (picked) voiceSelect.value = picked;
   if (!voiceSelect.value) voiceSelect.value = 'preset:auto';
-  if (voiceCount) voiceCount.textContent = `Voces instaladas: ${voices.length} (+7 presets)`;
+  renderVoiceSummary(voices, lastPresetCount);
 }
 
 function speak(text) {
@@ -314,6 +407,7 @@ volume.addEventListener('input', () => {
 voiceSelect.addEventListener('change', () => {
   localStorage.setItem('leertexto_voice_choice', voiceSelect.value || 'preset:auto');
   setStatus('Voz actualizada');
+  renderVoiceSummary(speechSynthesis.getVoices(), lastPresetCount);
 });
 
 btnRefreshVoices.addEventListener('click', () => loadVoices());

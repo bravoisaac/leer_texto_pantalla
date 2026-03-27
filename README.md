@@ -32,7 +32,7 @@ Las voces salen de Windows/Chromium. Para tener más opciones, instala voces en 
 
 Luego reinicia la app para que aparezcan en la lista.
 
-Tip: en el selector **Voz** tienes 7 presets por defecto (Auto/Default/ES/EN/JA y ES femenina/masculina) además de tus voces instaladas.
+Tip: en el selector **Voz** tienes presets “top” (Ximena, Dalia, Sabina, Raúl, Jorge, Helena, Laura, Pablo, Paloma, Alonso) **solo si esa voz está instalada en Windows**; si no, no aparece en la lista.
 
 ## Logs / errores
 
