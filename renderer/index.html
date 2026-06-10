@@ -7,71 +7,120 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <header>
-      <h1>LeerTexto</h1>
-      <p class="muted">
-        Atajos: <code>Ctrl+Shift+S</code> (seleccionar) • <code>Ctrl+Shift+L</code> (leer) • <code>Ctrl+Shift+C</code> (continuo)
-      </p>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">OCR + voz para escritorio</p>
+        <h1>LeerTexto</h1>
+      </div>
+      <div class="shortcut-strip" aria-label="Atajos">
+        <span><code>Ctrl+Shift+S</code> Seleccionar</span>
+        <span><code>Ctrl+Shift+L</code> Leer</span>
+        <span><code>Ctrl+Shift+C</code> Continuo</span>
+      </div>
     </header>
 
-    <section class="card">
-      <div class="row">
-        <button id="btnSelect">Seleccionar área</button>
-        <button id="btnRead" class="primary">Leer ahora</button>
-        <button id="btnContinuous" class="ghost">Continuo: OFF</button>
-      </div>
-      <div class="row">
-        <label for="lang">OCR idioma</label>
-        <select id="lang">
-          <option value="spa" selected>Español (spa)</option>
-          <option value="eng">Inglés (eng)</option>
-          <option value="jpn">Japonés (jpn)</option>
-        </select>
-        <label class="inline">
-          <input type="checkbox" id="autoSpeak" checked />
-          Hablar automático
-        </label>
-      </div>
-      <div class="row">
-        <label for="voice">Voz</label>
-        <select id="voice"></select>
-        <span id="voiceCount" class="muted"></span>
-        <button id="btnRefreshVoices" class="ghost">Actualizar</button>
-        <button id="btnVoiceSettings" class="ghost">Agregar voces</button>
-      </div>
-      <div class="row">
-        <label for="pollMs">Intervalo (ms)</label>
-        <input id="pollMs" type="range" min="100" max="2500" step="50" value="500" />
-        <span id="pollMsVal" class="mono">900</span>
-        <label for="stableReads">Confirmación</label>
-        <input id="stableReads" type="range" min="1" max="3" step="1" value="1" />
-        <span id="stableReadsVal" class="mono">1</span>
-        <label class="inline">
-          <input type="checkbox" id="cancelOnChange" checked />
-          Interrumpir al cambiar
-        </label>
-      </div>
-      <div class="meta">
-        <div><strong>Área:</strong> <span id="areaText">—</span></div>
-        <div><strong>Estado:</strong> <span id="statusText">Listo</span></div>
-      </div>
-    </section>
+    <main class="shell">
+      <section class="panel hero-panel" aria-labelledby="captureTitle">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Captura</p>
+            <h2 id="captureTitle">Selecciona un &aacute;rea y lee el texto al instante</h2>
+          </div>
+          <span class="status-pill" id="statusText">Listo</span>
+        </div>
 
-    <section class="card">
-      <div class="row">
-        <label for="rate">Velocidad</label>
-        <input id="rate" type="range" min="0.6" max="10" step="0.05" value="2.5" />
-        <span id="rateVal" class="mono">1.00</span>
-        <label for="volume">Volumen</label>
-        <input id="volume" type="range" min="0" max="1" step="0.05" value="1" />
-        <span id="volumeVal" class="mono">100%</span>
-        <button id="btnStop" class="ghost">Parar voz</button>
-      </div>
-      <textarea id="text" placeholder="El texto reconocido aparecerá aquí..." spellcheck="false"></textarea>
-    </section>
+        <div class="action-grid">
+          <button id="btnSelect" class="action-button">Seleccionar &aacute;rea</button>
+          <button id="btnRead" class="action-button primary">Leer ahora</button>
+          <button id="btnContinuous" class="action-button ghost">Continuo: OFF</button>
+        </div>
 
-    <footer class="muted">
-      <p>Nota: algunos juegos con anti-cheat pueden bloquear capturas de pantalla.</p>
+        <div class="area-summary">
+          <span>&Aacute;rea activa</span>
+          <strong id="areaText">-</strong>
+        </div>
+      </section>
+
+      <section class="panel controls-panel" aria-label="Configuraci&oacute;n OCR">
+        <div class="section-title">
+          <h2>OCR</h2>
+          <p>Idioma y comportamiento de lectura</p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field" for="lang">
+            <span>Idioma</span>
+            <select id="lang">
+              <option value="spa" selected>Espa&ntilde;ol (spa)</option>
+              <option value="eng">Ingl&eacute;s (eng)</option>
+              <option value="jpn">Japon&eacute;s (jpn)</option>
+            </select>
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="autoSpeak" checked />
+            <span>Hablar autom&aacute;tico</span>
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="cancelOnChange" checked />
+            <span>Interrumpir al cambiar</span>
+          </label>
+        </div>
+
+        <div class="range-grid">
+          <label for="pollMs">Intervalo</label>
+          <input id="pollMs" type="range" min="100" max="2500" step="50" value="500" />
+          <span id="pollMsVal" class="mono value-chip">900 ms</span>
+
+          <label for="stableReads">Confirmaci&oacute;n</label>
+          <input id="stableReads" type="range" min="1" max="3" step="1" value="1" />
+          <span id="stableReadsVal" class="mono value-chip">1</span>
+        </div>
+      </section>
+
+      <section class="panel voice-panel" aria-label="Configuraci&oacute;n de voz">
+        <div class="section-title">
+          <h2>Voz</h2>
+          <p>Selecciona una voz instalada en Windows</p>
+        </div>
+
+        <div class="voice-row">
+          <label class="field" for="voice">
+            <span>Voz activa</span>
+            <select id="voice"></select>
+          </label>
+          <button id="btnRefreshVoices" class="ghost">Actualizar</button>
+          <button id="btnVoiceSettings" class="ghost">Agregar voces</button>
+        </div>
+        <p id="voiceCount" class="muted"></p>
+      </section>
+
+      <section class="panel reader-panel" aria-labelledby="readerTitle">
+        <div class="panel-heading compact">
+          <div>
+            <p class="eyebrow">Salida</p>
+            <h2 id="readerTitle">Texto reconocido</h2>
+          </div>
+          <button id="btnStop" class="ghost">Parar voz</button>
+        </div>
+
+        <div class="range-grid two-col">
+          <label for="rate">Velocidad</label>
+          <input id="rate" type="range" min="0.6" max="10" step="0.05" value="2.5" />
+          <span id="rateVal" class="mono value-chip">1.00</span>
+
+          <label for="volume">Volumen</label>
+          <input id="volume" type="range" min="0" max="1" step="0.05" value="1" />
+          <span id="volumeVal" class="mono value-chip">100%</span>
+        </div>
+
+        <textarea id="text" placeholder="El texto reconocido aparecer&aacute; aqu&iacute;..." spellcheck="false"></textarea>
+      </section>
+    </main>
+
+    <footer>
+      <p class="muted">Algunos juegos con anti-cheat pueden bloquear capturas de pantalla.</p>
     </footer>
 
     <script src="./renderer.js"></script>

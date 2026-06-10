@@ -416,7 +416,7 @@ btnVoiceSettings.addEventListener('click', async () => {
 });
 
 pollMs.addEventListener('input', () => {
-  pollMsVal.textContent = String(pollMs.value);
+  pollMsVal.textContent = `${pollMs.value} ms`;
   localStorage.setItem('leertexto_poll_ms', String(pollMs.value));
   if (continuousOn) startContinuous();
 });
@@ -469,7 +469,7 @@ volumeVal.textContent = `${Math.round(Number(volume.value) * 100)}%`;
 
 const savedPoll = Number(localStorage.getItem('leertexto_poll_ms'));
 if (!Number.isNaN(savedPoll) && savedPoll >= 100) pollMs.value = String(savedPoll);
-pollMsVal.textContent = String(pollMs.value);
+pollMsVal.textContent = `${pollMs.value} ms`;
 stableReadsVal.textContent = String(stableReads.value);
 updateContinuousButton();
 loadVoices();

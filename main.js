@@ -28,8 +28,8 @@ function log(level, message, extra) {
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 520,
-    height: 620,
+    width: 960,
+    height: 760,
     resizable: true,
     autoHideMenuBar: true,
     webPreferences: {

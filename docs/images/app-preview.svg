@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Vista previa de LeerTexto</title>
+  <desc id="desc">Interfaz profesional de una app de OCR y lectura por voz.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#17191f"/>
+      <stop offset="0.52" stop-color="#101114"/>
+      <stop offset="1" stop-color="#151316"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0" stop-color="#12b3a8"/>
+      <stop offset="1" stop-color="#2fd0c5"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#000000" flood-opacity="0.36"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="760" fill="url(#bg)"/>
+  <circle cx="240" cy="22" r="230" fill="#12b3a8" opacity="0.16"/>
+  <g transform="translate(96 68)">
+    <text x="0" y="0" fill="#f0b35a" font-family="Inter, Segoe UI, Arial" font-size="15" font-weight="800">OCR + VOZ PARA ESCRITORIO</text>
+    <text x="0" y="48" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="48" font-weight="800">LeerTexto</text>
+    <g transform="translate(612 -18)" font-family="Inter, Segoe UI, Arial" font-size="15">
+      <rect x="0" y="0" width="172" height="38" rx="19" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/>
+      <text x="18" y="25" fill="#f3f5f7" font-weight="700">Ctrl+Shift+S</text>
+      <rect x="184" y="0" width="140" height="38" rx="19" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/>
+      <text x="202" y="25" fill="#f3f5f7" font-weight="700">Leer</text>
+      <rect x="336" y="0" width="166" height="38" rx="19" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-opacity="0.12"/>
+      <text x="354" y="25" fill="#f3f5f7" font-weight="700">Continuo</text>
+    </g>
+  </g>
+  <g transform="translate(96 160)" filter="url(#shadow)">
+    <rect x="0" y="0" width="680" height="244" rx="8" fill="#181a20" stroke="#303540"/>
+    <path d="M1 1H680V150C565 95 455 116 344 158C220 205 92 203 1 170Z" fill="#12b3a8" opacity="0.13"/>
+    <text x="28" y="42" fill="#f0b35a" font-family="Inter, Segoe UI, Arial" font-size="14" font-weight="800">CAPTURA</text>
+    <text x="28" y="78" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="28" font-weight="800">Selecciona un área y lee el texto</text>
+    <rect x="560" y="28" width="80" height="32" rx="16" fill="url(#accent)"/>
+    <text x="584" y="50" fill="#08211f" font-family="Inter, Segoe UI, Arial" font-size="14" font-weight="800">Listo</text>
+    <g transform="translate(28 122)" font-family="Inter, Segoe UI, Arial" font-size="16" font-weight="800">
+      <rect x="0" y="0" width="190" height="52" rx="8" fill="#20232b" stroke="#303540"/>
+      <text x="27" y="33" fill="#f3f5f7">Seleccionar área</text>
+      <rect x="204" y="0" width="190" height="52" rx="8" fill="url(#accent)"/>
+      <text x="255" y="33" fill="#08211f">Leer ahora</text>
+      <rect x="408" y="0" width="190" height="52" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#303540"/>
+      <text x="452" y="33" fill="#f3f5f7">Continuo: OFF</text>
+    </g>
+    <line x1="28" y1="202" x2="652" y2="202" stroke="#ffffff" stroke-opacity="0.08"/>
+    <text x="28" y="226" fill="#9ba3af" font-family="Inter, Segoe UI, Arial" font-size="15">Área activa</text>
+    <text x="505" y="226" fill="#f3f5f7" font-family="Consolas, monospace" font-size="15">x=420, y=190</text>
+  </g>
+  <g transform="translate(800 160)" filter="url(#shadow)">
+    <rect width="384" height="244" rx="8" fill="#181a20" stroke="#303540"/>
+    <text x="24" y="40" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="24" font-weight="800">OCR</text>
+    <text x="24" y="66" fill="#9ba3af" font-family="Inter, Segoe UI, Arial" font-size="15">Idioma y comportamiento</text>
+    <rect x="24" y="90" width="336" height="46" rx="8" fill="#12141a" stroke="#303540"/>
+    <text x="42" y="120" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="16">Español (spa)</text>
+    <circle cx="34" cy="162" r="7" fill="#12b3a8"/>
+    <text x="52" y="168" fill="#d7dce5" font-family="Inter, Segoe UI, Arial" font-size="15" font-weight="700">Hablar automático</text>
+    <circle cx="34" cy="198" r="7" fill="#12b3a8"/>
+    <text x="52" y="204" fill="#d7dce5" font-family="Inter, Segoe UI, Arial" font-size="15" font-weight="700">Interrumpir al cambiar</text>
+  </g>
+  <g transform="translate(96 430)" filter="url(#shadow)">
+    <rect width="1088" height="238" rx="8" fill="#181a20" stroke="#303540"/>
+    <text x="28" y="42" fill="#f0b35a" font-family="Inter, Segoe UI, Arial" font-size="14" font-weight="800">SALIDA</text>
+    <text x="28" y="78" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="26" font-weight="800">Texto reconocido</text>
+    <rect x="28" y="104" width="1032" height="104" rx="8" fill="#101217" stroke="#303540"/>
+    <text x="52" y="142" fill="#f3f5f7" font-family="Inter, Segoe UI, Arial" font-size="20">El texto reconocido aparecerá aquí...</text>
+    <text x="52" y="174" fill="#9ba3af" font-family="Inter, Segoe UI, Arial" font-size="16">OCR en pantalla, lectura automática y modo continuo.</text>
+  </g>
+</svg>
