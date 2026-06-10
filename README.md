@@ -1,6 +1,6 @@
-# LeerTexto
+# VisionSpeak
 
-LeerTexto es una app de escritorio para Windows que permite seleccionar un area de la pantalla, aplicar OCR y leer el texto en voz alta. Esta pensada para juegos, novelas visuales, capturas o cualquier pantalla donde el texto no se puede copiar.
+VisionSpeak es una app de escritorio para Windows que permite seleccionar un area de la pantalla, aplicar OCR y leer el texto en voz alta. Esta pensada para juegos, novelas visuales, capturas o cualquier pantalla donde el texto no se puede copiar.
 
 ![Vista previa de LeerTexto](docs/images/app-preview.svg)
 
